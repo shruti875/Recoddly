@@ -1,0 +1,97 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recoddly | Welcome</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="auth-body">
+
+<div class="auth-container">
+
+    <a href="/" class="logo">r<span>.</span> recoddly</a>
+
+    <div class="auth-card">
+
+        <div class="auth-icon">✳</div>
+
+        <p class="eyebrow">YOUR IDEA-TO-ACTION SPACE</p>
+
+        {% if mode == "signup" %}
+            <h1>Create your <span>space.</span></h1>
+            <p class="subtitle">Your ideas deserve a place to grow.</p>
+        {% else %}
+            <h1>Welcome <span>back.</span></h1>
+            <p class="subtitle">Let's make something happen today.</p>
+        {% endif %}
+
+        {% with messages = get_flashed_messages() %}
+            {% for message in messages %}
+                <div class="flash">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+
+        <div class="separator">SIGN IN WITH YOUR ACCOUNT</div>
+
+        <form method="POST">
+
+            {% if mode == "signup" %}
+
+                <label>FULL NAME</label>
+                <input type="text" name="name"
+                       placeholder="Your name" required>
+
+                <label>USERNAME</label>
+                <input type="text" name="username"
+                       placeholder="Choose a username" required>
+
+                <label>EMAIL ADDRESS</label>
+                <input type="email" name="email"
+                       placeholder="you@example.com" required>
+
+            {% else %}
+
+                <label>USERNAME OR EMAIL</label>
+                <input type="text" name="identity"
+                       placeholder="Enter your username or email" required>
+
+            {% endif %}
+
+            <label>PASSWORD</label>
+            <input type="password" name="password"
+                   placeholder="Minimum 8 characters"
+                   minlength="8" required>
+
+            <button class="main-btn" type="submit">
+                {% if mode == "signup" %}
+                    Create account ↗
+                {% else %}
+                    Sign in ↗
+                {% endif %}
+            </button>
+
+        </form>
+
+        <div class="switch-text">
+
+            {% if mode == "signup" %}
+                Already have an account?
+                <a href="/login">Sign in</a>
+            {% else %}
+                New to Recoddly?
+                <a href="/signup">Create account</a>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <footer>RECODDLY © 2026 · THINK IT. PLAN IT. MAKE IT HAPPEN.</footer>
+
+</div>
+
+</body>
+</html>

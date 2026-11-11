@@ -1,0 +1,399 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recoddly | Workspace</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="dashboard-body">
+
+<div class="app-layout">
+
+    <aside class="sidebar" id="sidebar">
+
+        <a href="/dashboard" class="logo">r<span>.</span> recoddly</a>
+
+        <button class="new-chat" type="button" onclick="newChat()">＋ New chat</button>
+
+        <p class="side-label">WORKSPACE</p>
+
+        <button class="nav-item active" type="button" onclick="showPage('chat', this)">
+            ◫ &nbsp; New chat
+        </button>
+
+        <button class="nav-item" type="button" onclick="showPage('recent', this)">
+            ◷ &nbsp; Recent chats
+        </button>
+
+        <button class="nav-item" type="button" onclick="showPage('tasks', this)">
+            ☷ &nbsp; Tasks
+        </button>
+
+        <button class="nav-item" type="button" onclick="showPage('devices', this)">
+            ◉ &nbsp; Connected Devices
+        </button>
+
+        <p class="side-label">YOUR SPACE</p>
+
+        <button class="nav-item" type="button" onclick="showPage('settings', this)">
+            ⚙ &nbsp; Settings
+        </button>
+
+        <button class="nav-item" type="button" onclick="showPage('profile', this)">
+            ◉ &nbsp; Profile
+        </button>
+
+        <div class="sidebar-bottom">
+
+            <div class="user-info">
+                <div class="avatar">{{ user.name[0]|upper }}</div>
+
+                <div>
+                    <strong>{{ user.name }}</strong>
+                    <small>@{{ user.username }}</small>
+                </div>
+            </div>
+
+            <a href="/logout" class="logout">↗ Logout</a>
+
+        </div>
+
+    </aside>
+
+
+    <main class="main-content">
+
+        <header class="topbar">
+
+            <button
+                class="mobile-menu"
+                type="button"
+                onclick="toggleSidebar()"
+                aria-label="Toggle navigation menu"
+                ☰
+            </button>
+
+            <span id="pageTitle">New chat</span>
+
+            <button class="theme-button" type="button" onclick="toggleTheme()">
+                ☼
+            </button>
+
+        </header>
+
+
+        <!-- NEW CHAT -->
+
+        <section id="chat" class="page active">
+
+            <div class="welcome-screen" id="welcome">
+
+                <div class="big-icon">✳</div>
+
+                <p class="eyebrow">YOUR PERSONAL EXECUTION ASSISTANT</p>
+
+                <h1>What's on your<br><span>mind today?</span></h1>
+
+                <p class="welcome-text">
+                    Drop your ideas here. Let's turn them into something real.
+                </p>
+
+                <div class="suggestions">
+
+                    <button type="button" onclick="suggest('Help me build a website')">
+                        ✦ Build a website
+                    </button>
+
+                    <button type="button" onclick="suggest('Help me plan my studies')">
+                        ✦ Plan my studies
+                    </button>
+
+                    <button type="button" onclick="suggest('I have a startup idea')">
+                        ✦ Explore an idea
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="chat-messages" id="chatMessages"></div>
+
+            <div class="chat-box">
+
+                <textarea
+                    id="chatInput"
+                    placeholder="Tell Recoddly what's on your mind..."
+                    rows="2"></textarea>
+
+                <div class="chat-controls">
+
+                    <small>✧ Your ideas, your next move.</small>
+
+                    <div>
+                        <button type="button" onclick="startVoice()" class="voice-btn">🎙</button>
+
+                        <button type="button" onclick="sendMessage()" class="send-btn">
+                            Send ↗
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <p class="disclaimer">
+                Recoddly is your planning assistant. Review your plans before acting.
+            </p>
+
+        </section>
+
+
+        <!-- RECENT CHATS -->
+
+        <section id="recent" class="page">
+
+            <div class="page-heading">
+                <p class="eyebrow">YOUR IDEAS, SAVED</p>
+                <h1>Recent <span>chats.</span></h1>
+                <p>Continue where you left off.</p>
+            </div>
+
+            <div id="recentChats" class="content-list"></div>
+
+        </section>
+
+
+        <!-- TASKS -->
+
+        <section id="tasks" class="page">
+
+            <div class="page-heading">
+                <p class="eyebrow">MAKE IT HAPPEN</p>
+                <h1>Your <span>tasks.</span></h1>
+                <p>Every big achievement starts with a small step.</p>
+            </div>
+
+            <div id="taskList" class="content-list"></div>
+
+        </section>
+
+
+        <!-- CONNECTED DEVICES -->
+
+        <section id="devices" class="page">
+
+            <div class="page-heading">
+                <p class="eyebrow">YOUR CONNECTED ECOSYSTEM</p>
+                <h1>Connected <span>devices.</span></h1>
+                <p>Bring your ideas to Recoddly, wherever you are.</p>
+            </div>
+
+            <div class="device-overview">
+
+                <div class="device-stat">
+                    <strong id="connectedCount">0</strong>
+                    <span>Connected devices</span>
+                </div>
+
+                <div class="device-stat">
+                    <strong>3</strong>
+                    <span>Available devices</span>
+                </div>
+
+            </div>
+
+            <div class="device-grid">
+
+                <div class="device-card">
+
+                    <div class="device-icon">⌚</div>
+
+                    <h2>Smartwatch</h2>
+
+                    <p>Send quick ideas and voice commands from your wrist.</p>
+
+                    <span class="device-status" id="watchStatus">● Disconnected</span>
+
+                    <button type="button" onclick="toggleDevice('watch')" id="watchButton">
+                        Connect device
+                    </button>
+
+                </div>
+
+
+                <div class="device-card">
+
+                    <div class="device-icon">◉</div>
+
+                    <h2>Smart Glasses</h2>
+
+                    <p>Capture thoughts and send them directly to Recoddly.</p>
+
+                    <span class="device-status" id="glassesStatus">● Disconnected</span>
+
+                    <button type="button" onclick="toggleDevice('glasses')" id="glassesButton">
+                        Connect device
+                    </button>
+
+                </div>
+
+
+                <div class="device-card">
+
+                    <div class="device-icon">♫</div>
+
+                    <h2>AI Earbuds</h2>
+
+                    <p>Speak your ideas and receive voice-based responses.</p>
+
+                    <span class="device-status" id="earbudsStatus">● Disconnected</span>
+
+                    <button type="button" onclick="toggleDevice('earbuds')" id="earbudsButton">
+                        Connect device
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="device-command">
+
+                <h2>Test device command ✳</h2>
+
+                <p>Simulate sending a command through a connected device.</p>
+
+                <select id="deviceSelect">
+                    <option value="watch">Smartwatch</option>
+                    <option value="glasses">Smart Glasses</option>
+                    <option value="earbuds">AI Earbuds</option>
+                </select>
+
+                <input
+                    type="text"
+                    id="deviceCommand"
+                    placeholder="Example: Remind me to study tomorrow">
+
+                <div class="device-command-actions">
+
+                    <button
+                        type="button"
+                        onclick="startDeviceVoice()"
+                        class="device-voice-btn">
+                        🎙 Speak command
+                    </button>
+
+                    <button type="button" onclick="sendDeviceCommand()">
+                        Send command ↗
+                    </button>
+
+                </div>
+
+                <div id="deviceResponse"></div>
+
+            </div>
+
+        </section>
+
+
+        <!-- SETTINGS -->
+
+        <section id="settings" class="page">
+
+            <div class="page-heading">
+                <p class="eyebrow">MAKE IT YOURS</p>
+                <h1>Settings<span>.</span></h1>
+            </div>
+
+            <div class="setting-card">
+
+                <div>
+                    <strong>Appearance</strong>
+                    <p>Choose your workspace theme.</p>
+                </div>
+
+                <button type="button" onclick="setTheme('dark')">◐ Dark</button>
+
+                <button type="button" onclick="setTheme('light')">☼ Light</button>
+
+            </div>
+
+
+            <div class="setting-card">
+
+                <div>
+                    <strong>Account</strong>
+                    <p>Manage your personal information.</p>
+                </div>
+
+                <button type="button" onclick="showPage('profile')">
+                    Edit profile ↗
+                </button>
+
+            </div>
+
+
+            <div class="setting-card">
+
+                <div>
+                    <strong>Logout</strong>
+                    <p>Sign out of your account.</p>
+                </div>
+
+                <a href="/logout">Logout ↗</a>
+
+            </div>
+
+        </section>
+
+
+        <!-- PROFILE -->
+
+        <section id="profile" class="page">
+
+            <div class="page-heading">
+                <p class="eyebrow">YOUR ACCOUNT</p>
+                <h1>Your <span>profile.</span></h1>
+            </div>
+
+            <div class="profile-card">
+
+                <div class="avatar large">
+                    {{ user.name[0]|upper }}
+                </div>
+
+                <h2>{{ user.name }}</h2>
+
+                <p>@{{ user.username }}</p>
+
+                <p>{{ user.email }}</p>
+
+                <a href="/logout" class="main-btn profile-logout">
+                    Logout ↗
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <footer class="main-footer">
+            RECODDLY ✳ THINK IT. PLAN IT. MAKE IT HAPPEN.
+        </footer>
+
+    </main>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
+
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+
+</body>
+</html>
